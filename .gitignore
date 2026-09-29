@@ -3,6 +3,9 @@ cv-work/
 work/
 evals/files/
 
+# built skill zip — published via GitHub releases, never committed
+dist/
+
 __pycache__/
 *.pyc
 .DS_Store

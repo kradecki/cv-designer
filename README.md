@@ -1,51 +1,47 @@
 # cv-designer
 
+[![Latest release](https://img.shields.io/github/v/release/kradecki/CV-generator)](https://github.com/kradecki/CV-generator/releases/latest)
+[![Release build](https://github.com/kradecki/CV-generator/actions/workflows/release.yml/badge.svg)](https://github.com/kradecki/CV-generator/actions/workflows/release.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A Claude skill that turns a LinkedIn profile export into a tailored, machine-readable CV as a
-single-column A4 PDF — and a small Python pipeline you can also run on its own.
+single-column A4 PDF — plus a small Python pipeline you can run on its own.
 
 ![Example CV rendered by the skill](examples/sample-cv.png)
 
-## What it does
+## How it works
 
-1. **Reads a LinkedIn "Save to PDF" export** and separates the sidebar (contact, skills, languages)
-   from the main column so the two-column first page doesn't interleave. Produces a text dump and a
-   heuristic draft, then Claude writes a complete, untrimmed `cv-master.yaml` — the single source of
-   truth the candidate keeps and hands back next time.
-2. **Asks for what the export cannot contain** — email, phone, a confirmation of the profile URL, and
-   any inconsistency the extractor spots (years claimed vs. dated roles, profile location vs. role
-   locations).
-3. **Tailors to a job posting** (URL or pasted text) through a written protocol: requirements table →
-   evidence map → strategy (headline, summary angle, expand/compress/hide per role, skills order) →
-   rewrite. Every bullet must trace to the master; nothing is invented. Output includes a
-   `tailoring-report.md` with requirement coverage and an honest-gaps list.
-4. **Renders** the YAML through a fixed HTML/CSS template with headless Chromium: Inter embedded,
-   A4, two pages max, optional photo, optional consent footer (Polish employers). Auto-fits density
-   within a small range and warns about headlines and role headers that will wrap.
-5. **Verifies** the PDF before delivery: page count, text layer, no private-use glyphs, words intact
-   under pdfminer, standard section order, embedded fonts, metadata, no hidden/tiny/white text, link
+1. **Extract** — reads a LinkedIn "Save to PDF" export, separates the sidebar (contact, skills,
+   languages) from the main column, and drafts `cv-master.yaml` — the single source of truth the
+   candidate keeps and hands back next time.
+2. **Complete** — asks for what the export cannot contain (email, phone, profile URL) and flags any
+   inconsistency the extractor spots (years claimed vs. dated roles, location mismatches).
+3. **Tailor** — matches the master against a job posting (URL or pasted text) through a written
+   protocol: requirements table → evidence map → strategy → rewrite. Every bullet traces back to
+   the master; nothing is invented. Ships a `tailoring-report.md` with requirement coverage and an
+   honest-gaps list.
+4. **Render** — YAML through a fixed HTML/CSS template with headless Chromium: Inter embedded, A4,
+   two pages max, optional photo, optional consent footer (Polish employers). Auto-fits density and
+   warns about headlines and role headers that will wrap.
+5. **Verify** — checks the PDF before delivery: page count, text layer, word integrity under
+   pdfminer, standard section order, embedded fonts, metadata, no hidden/tiny/white text, link
    annotations, file size.
 
 The design is deliberately plain — one typeface, one muted accent, hairlines, whitespace. Machine
-readability drove several choices you might not expect: no two-column layout, mixed-case section
-headings (uppercase + tracking splits under pdfminer), no OpenType numeral variants (they extract
-as private-use glyphs), and the *hinted* Inter build (the unhinted web build makes pdfminer split
+readability drove choices you might not expect: no two-column layout, mixed-case section headings
+(uppercase + tracking splits under pdfminer), no OpenType numeral variants (they extract as
+private-use glyphs), and the *hinted* Inter build (the unhinted web build makes pdfminer split
 words after every "t" in the 500/600 weights).
 
-## Installing the skill
+## Installation
 
-A skill is just a folder with a `SKILL.md` in it. Claude.ai takes it as a zip whose root is that
-folder; Claude Code takes the folder itself.
-
-**Claude.ai (web / desktop / Cowork):** go to **Customize → Skills** (https://claude.ai/customize/skills)
-and upload `dist/cv-designer.zip`. To rebuild the zip after editing the skill:
-
-```bash
-zip -r dist/cv-designer.zip cv-designer -x '*/__pycache__/*' -x '*/evals/*'
-```
+**Claude.ai (web / desktop / Cowork):** download `cv-designer.zip` from the
+[latest release](https://github.com/kradecki/CV-generator/releases/latest), then upload it at
+**Customize → Skills** (<https://claude.ai/customize/skills>).
 
 **Claude Code:** copy `cv-designer/` into `~/.claude/skills/` (or a project's `.claude/skills/`).
 
-Then say something like *"Here's my LinkedIn export and a job posting URL — make me a CV"*.
+Then say something like *"Here's my LinkedIn export and a job posting URL — make me a CV."*
 
 ## Running the pipeline without Claude
 
@@ -74,7 +70,7 @@ python cv-designer/scripts/check_pdf.py --pdf work/My-Name-CV.pdf --data cv-mast
 
 `examples/` has a synthetic `sample-cv.yaml` and its rendered PDF.
 
-## Layout of this repository
+## Repository layout
 
 ```
 cv-designer/            the skill — installable as-is
@@ -84,20 +80,30 @@ cv-designer/            the skill — installable as-is
   assets/               template.html, style.css, example-cv.yaml, fonts/ (Inter, OFL)
   evals/evals.json      test prompts and assertions used during development
 examples/               synthetic sample: YAML → PDF → PNG
-dist/cv-designer.zip    the skill packaged for upload to Claude.ai
+```
+
+## Releases
+
+Pushing a tag `vX.Y.Z` triggers CI, which builds `cv-designer.zip` and attaches it to a GitHub
+release — the zip is never committed to the repository.
+
+```bash
+git tag v0.2.0 && git push origin v0.2.0
 ```
 
 ## Evaluation
 
-The skill was developed with skill-creator's eval loop: three test cases (LinkedIn export + posting
-with photo; export only, general CV; existing master + posting), each run with and without the skill.
-Final iteration: skill runs passed 100% of 71 assertions, baseline runs 86%. The assertions that
-separated them were machine-readability (word integrity under pdfminer, standard headings, no
-placeholders), the reusable master file, and the tailoring report with honest gaps.
+Developed with skill-creator's eval loop: three test cases (export + posting with photo; export
+only; existing master + posting), each run with and without the skill. Final iteration: skill runs
+passed 100% of 71 assertions, baseline 86%. The gap came from machine-readability (word integrity
+under pdfminer, standard headings, no placeholders), the reusable master file, and the tailoring
+report with honest gaps. Test inputs are a real person's data and are not in the repository.
 
-Test inputs are a real person's data and are not in the repository.
+## Contributing
 
-## Licence
+Issues and pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
 
 MIT for the code and documentation. Inter is bundled under the SIL Open Font License 1.1
 (`cv-designer/assets/fonts/LICENSE-Inter.txt`).
