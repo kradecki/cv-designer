@@ -9,7 +9,8 @@ Turns a person's LinkedIn export (or existing master file) into a tailored, two-
 A4 PDF that reads calmly to a human and parses cleanly for screening software — plus a short report
 saying what was changed and where the candidate is weak for the role.
 
-The design is fixed and deliberate (see `references/design.md`). Your judgment goes into the
+Each design is fixed and deliberate — the candidate picks a design from `designs/`, nothing is
+tweaked per CV (see `references/design.md`). Your judgment goes into the
 *content*: building an honest, complete master record, then tailoring it to a posting without
 inventing anything. Read `references/writing-rules.md` before writing a single bullet, and
 `references/tailoring.md` before touching the master for a posting.
@@ -139,11 +140,20 @@ python scripts/prepare_photo.py --in <photo> --out cv-work/<person>/photo.jpg   
 
 ### 6. Render and review
 
+**Choose a design first.** In order: (1) the candidate named one → use it; (2) `cv-master.yaml`
+has a `design:` key → use that saved preference; (3) otherwise read every `designs/*/design.json`
+(skip `_`-prefixed), list `name — description` to the candidate, ask once, and write the choice
+into `cv-master.yaml` as a top-level `design:` key. If the candidate uploads a design bundle
+(zip), unzip it into the working directory and pass the directory to `--design`; say clearly the
+design is unofficial and that delivery still requires every `check_pdf.py` check to pass. A
+missing or malformed `design.json` only affects the listing: present such a design by its
+directory name and mention the manifest problem.
+
 ```bash
 python scripts/render_cv.py --data cv-work/<person>/<company>/cv-tailored.yaml \
     --out "cv-work/<person>/<company>/<First-Last>-CV-<Company>.pdf" \
-    --photo cv-work/<person>/photo.jpg --auto-fit \
-    --preview-dir cv-work/<person>/<company>/previews --html-out cv-work/<person>/<company>/cv.html
+    --photo cv-work/<person>/photo.jpg --design <name-or-dir> \
+    --auto-fit --preview-dir cv-work/<person>/<company>/previews --html-out cv-work/<person>/<company>/cv.html
 ```
 
 The last line printed is a JSON summary: page count, body size used, last-page fill, preview paths,
@@ -162,7 +172,7 @@ warning in the YAML before looking at the previews; they are the defects reviewe
   template artefacts. Fix in the YAML, re-render, look again. Two or three rounds is normal.
 
 Accent colour is `--accent "#hex"` if the candidate asks for something other than the default
-blue-grey; keep it muted (see design.md). Nothing else about the look is configurable per CV.
+blue-grey; keep it muted (see design.md). Design choice and accent are the only look controls; nothing else is configurable per CV.
 
 ### 7. Verify machine readability
 
@@ -196,8 +206,8 @@ of the design; they will see it.
   22, the candidate knows why; ask, keep their number, record the reason in `meta.notes`.
 - **No hidden text or keyword blocks.** Screening tools flag them; humans who find them stop reading.
 - **Photo is the candidate's call.** Never require one; never add one they did not provide.
-- **The template is not per-CV configurable.** Structural changes go into the skill's assets so
-  every future CV benefits, with `design.md` updated to match.
+- **Designs are not per-CV configurable.** Pick a design; structural changes go into that design's
+  folder (or a new design) via PR so every future CV benefits, with `design.md` updated to match.
 - **Personal data stays in the session.** The master, the photo and the PDF go to the candidate and
   the attached Project only. Never post them anywhere or pass them to another service.
 - **Language:** English throughout, whatever the posting's language, unless the candidate asks
@@ -215,6 +225,8 @@ of the design; they will see it.
 | Crop/resize photo | `scripts/prepare_photo.py` |
 | YAML → PDF (+HTML, PNG previews, auto-fit) | `scripts/render_cv.py` |
 | Verify the PDF before delivery | `scripts/check_pdf.py` |
+| Available designs + their one-liners | `designs/*/design.json` |
+| Create a new design | `designs/_template/README.md` |
 
 Dependencies: Python 3 with `playwright` (Chromium installed), `pdfplumber`, `pypdf`, `Pillow`,
 `PyYAML`, `Jinja2`; `pdftoppm` and `pdffonts` from poppler-utils for previews and font checks.
