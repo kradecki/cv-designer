@@ -20,7 +20,7 @@ single-column A4 PDF — plus a small Python pipeline you can run on its own.
    protocol: requirements table → evidence map → strategy → rewrite. Every bullet traces back to
    the master; nothing is invented. Ships a `tailoring-report.md` with requirement coverage and an
    honest-gaps list.
-4. **Render** — YAML through a fixed HTML/CSS template with headless Chromium: Inter embedded, A4,
+4. **Render** — YAML through the chosen design's HTML/CSS template (see Designs) with headless Chromium: Inter embedded, A4,
    two pages max, optional photo, optional consent footer (Polish employers). Auto-fits density and
    warns about headlines and role headers that will wrap.
 5. **Verify** — checks the PDF before delivery: page count, text layer, word integrity under
@@ -32,6 +32,22 @@ readability drove choices you might not expect: no two-column layout, mixed-case
 (uppercase + tracking splits under pdfminer), no OpenType numeral variants (they extract as
 private-use glyphs), and the *hinted* Inter build (the unhinted web build makes pdfminer split
 words after every "t" in the 500/600 weights).
+
+## Designs
+
+Pick a look; every design passes the same machine-readability gate before it can merge.
+
+| | |
+|---|---|
+| <img src="plugins/cv-designer/skills/cv-designer/designs/nordic/preview.png" width="260" alt="nordic design preview"> | **nordic** — Scandinavian restraint: single muted accent, hairline rules, Inter, lots of air. The default. |
+
+Choose it in conversation ("use the nordic design"), save it in your `cv-master.yaml`
+(`design: nordic`), or pass `--design nordic` to the renderer.
+
+**Create your own:** copy `designs/_template/`, restyle, run the test loop, open a PR — the
+[design authoring guide](plugins/cv-designer/skills/cv-designer/designs/_template/README.md)
+has the full contract. CI renders every design against the sample CV and blocks anything that
+breaks ATS extraction.
 
 ## Installation
 
@@ -83,7 +99,7 @@ python $SKILL/scripts/prepare_photo.py --in IMG_1234.jpg --out work/photo.jpg
 
 # 4. Render
 python $SKILL/scripts/render_cv.py --data cv-master.yaml --out work/My-Name-CV.pdf \
-    --photo work/photo.jpg --auto-fit --preview-dir work/previews
+    --photo work/photo.jpg --auto-fit --preview-dir work/previews --design nordic
 
 # 5. Check
 python $SKILL/scripts/check_pdf.py --pdf work/My-Name-CV.pdf --data cv-master.yaml
@@ -100,7 +116,10 @@ plugins/cv-designer/      the plugin (.claude-plugin/plugin.json)
     SKILL.md              workflow the model follows
     references/           tailoring protocol, writing rules, design spec
     scripts/              extract_linkedin.py, prepare_photo.py, render_cv.py, check_pdf.py
-    assets/               template.html, style.css, example-cv.yaml, fonts/ (Inter, OFL)
+    designs/
+      nordic/             default design (template.html, style.css, preview.png)
+      _template/          design authoring guide + contract (README.md, template.html, style.css)
+    assets/               example-cv.yaml, fonts/ (Inter, OFL)
     evals/evals.json      test prompts and assertions used during development
 examples/                 synthetic sample: YAML → PDF → PNG
 ```

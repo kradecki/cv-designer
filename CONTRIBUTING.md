@@ -51,6 +51,14 @@ Validate plugin metadata before pushing:
 claude plugin validate .
 ```
 
+## Contributing a design
+
+Copy `plugins/cv-designer/skills/cv-designer/designs/_template/` to `designs/<your-name>/` and
+follow its [README](plugins/cv-designer/skills/cv-designer/designs/_template/README.md) — it
+carries the full contract (headings, rem sizing, fonts, forbidden patterns), the test loop, and
+the preview.png requirement. CI must be green: every design is rendered (plain + photo) and
+checked with `check_pdf.py` on each PR.
+
 ## Releases
 
 Maintainers cut releases by pushing a tag; CI builds and attaches the zip:

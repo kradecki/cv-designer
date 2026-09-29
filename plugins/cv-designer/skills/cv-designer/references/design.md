@@ -1,10 +1,13 @@
 # Design spec — what the template does and what you may change
 
+> This file is the rationale and review checklist for the **nordic** design and the general rules
+> all designs share. Building a new design? Start at `designs/_template/README.md`.
+
 The visual language is Scandinavian in the functional sense: one typeface, generous whitespace, a
 single muted accent, hairline rules, nothing decorative. The design should be invisible; the reader
 should notice the content and, at most, that the document feels calm and well made.
 
-The template (`assets/template.html` + `assets/style.css`) already implements this. Read this file
+Each design (`designs/<name>/template.html` + `style.css`) implements this; `designs/nordic` is the reference. Read this file
 so you know what is deliberate and do not "improve" it ad hoc.
 
 ## Page
