@@ -1,0 +1,7 @@
+{
+  "name": "cv-designer",
+  "description": "Turns a LinkedIn profile export into a tailored, machine-readable CV as a single-column A4 PDF",
+  "author": { "name": "Krzysztof Radecki" },
+  "repository": "https://github.com/kradecki/cv-designer",
+  "license": "MIT"
+}

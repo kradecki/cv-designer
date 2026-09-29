@@ -1,7 +1,7 @@
 # cv-designer
 
-[![Latest release](https://img.shields.io/github/v/release/kradecki/CV-generator)](https://github.com/kradecki/CV-generator/releases/latest)
-[![Release build](https://github.com/kradecki/CV-generator/actions/workflows/release.yml/badge.svg)](https://github.com/kradecki/CV-generator/actions/workflows/release.yml)
+[![Latest release](https://img.shields.io/github/v/release/kradecki/cv-designer)](https://github.com/kradecki/cv-designer/releases/latest)
+[![Release build](https://github.com/kradecki/cv-designer/actions/workflows/release.yml/badge.svg)](https://github.com/kradecki/cv-designer/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A Claude skill that turns a LinkedIn profile export into a tailored, machine-readable CV as a
@@ -35,11 +35,24 @@ words after every "t" in the 500/600 weights).
 
 ## Installation
 
-**Claude.ai (web / desktop / Cowork):** download `cv-designer.zip` from the
-[latest release](https://github.com/kradecki/CV-generator/releases/latest), then upload it at
-**Customize → Skills** (<https://claude.ai/customize/skills>).
+This repository is a Claude plugin marketplace — one install flow everywhere.
 
-**Claude Code:** copy `cv-designer/` into `~/.claude/skills/` (or a project's `.claude/skills/`).
+**Claude Code:**
+
+```bash
+claude plugin marketplace add kradecki/cv-designer
+claude plugin install cv-designer@cv-designer
+```
+
+or in-session: `/plugin install cv-designer@cv-designer`.
+
+**Claude.ai / Claude Desktop:** go to **Customize → Plugins → Add → Add marketplace**, enter
+`kradecki/cv-designer`, then add the **cv-designer** plugin. Enable *Sync automatically* to pick up
+updates.
+
+**Manual fallback:** download `cv-designer.zip` from the
+[latest release](https://github.com/kradecki/cv-designer/releases/latest) and upload it at
+**Customize → Skills**, or copy `skills/cv-designer/` into `~/.claude/skills/`.
 
 Then say something like *"Here's my LinkedIn export and a job posting URL — make me a CV."*
 
@@ -53,19 +66,19 @@ python -m playwright install chromium          # once
 sudo apt install poppler-utils                 # pdftoppm / pdffonts (brew install poppler on macOS)
 
 # 1. LinkedIn export → text + draft YAML
-python cv-designer/scripts/extract_linkedin.py --pdf Profile.pdf --out-dir work/
+python skills/cv-designer/scripts/extract_linkedin.py --pdf Profile.pdf --out-dir work/
 
-# 2. Edit work/linkedin-draft.yaml into cv-master.yaml (schema: cv-designer/assets/example-cv.yaml)
+# 2. Edit work/linkedin-draft.yaml into cv-master.yaml (schema: skills/cv-designer/assets/example-cv.yaml)
 
 # 3. Optional photo
-python cv-designer/scripts/prepare_photo.py --in IMG_1234.jpg --out work/photo.jpg
+python skills/cv-designer/scripts/prepare_photo.py --in IMG_1234.jpg --out work/photo.jpg
 
 # 4. Render
-python cv-designer/scripts/render_cv.py --data cv-master.yaml --out work/My-Name-CV.pdf \
+python skills/cv-designer/scripts/render_cv.py --data cv-master.yaml --out work/My-Name-CV.pdf \
     --photo work/photo.jpg --auto-fit --preview-dir work/previews
 
 # 5. Check
-python cv-designer/scripts/check_pdf.py --pdf work/My-Name-CV.pdf --data cv-master.yaml
+python skills/cv-designer/scripts/check_pdf.py --pdf work/My-Name-CV.pdf --data cv-master.yaml
 ```
 
 `examples/` has a synthetic `sample-cv.yaml` and its rendered PDF.
@@ -73,7 +86,8 @@ python cv-designer/scripts/check_pdf.py --pdf work/My-Name-CV.pdf --data cv-mast
 ## Repository layout
 
 ```
-cv-designer/            the skill — installable as-is
+.claude-plugin/         marketplace.json + plugin.json — the repo is its own marketplace
+skills/cv-designer/     the skill
   SKILL.md              workflow the model follows
   references/           tailoring protocol, writing rules, design spec
   scripts/              extract_linkedin.py, prepare_photo.py, render_cv.py, check_pdf.py
@@ -85,7 +99,8 @@ examples/               synthetic sample: YAML → PDF → PNG
 ## Releases
 
 Pushing a tag `vX.Y.Z` triggers CI, which builds `cv-designer.zip` and attaches it to a GitHub
-release — the zip is never committed to the repository.
+release — the zip is never committed to the repository. Marketplace installs track the repo
+directly; the release zip is the manual-upload fallback.
 
 ```bash
 git tag v0.2.0 && git push origin v0.2.0
@@ -106,4 +121,4 @@ Issues and pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 ## License
 
 MIT for the code and documentation. Inter is bundled under the SIL Open Font License 1.1
-(`cv-designer/assets/fonts/LICENSE-Inter.txt`).
+(`skills/cv-designer/assets/fonts/LICENSE-Inter.txt`).

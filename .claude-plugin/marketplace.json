@@ -1,0 +1,12 @@
+{
+  "name": "cv-designer",
+  "owner": { "name": "Krzysztof Radecki" },
+  "description": "CV designer skill — turns a LinkedIn export into a tailored, machine-readable CV",
+  "plugins": [
+    {
+      "name": "cv-designer",
+      "source": ".",
+      "description": "LinkedIn export → tailored, machine-readable single-column A4 CV (PDF)"
+    }
+  ]
+}
