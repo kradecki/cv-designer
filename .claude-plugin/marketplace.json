@@ -5,7 +5,7 @@
   "plugins": [
     {
       "name": "cv-designer",
-      "source": ".",
+      "source": "./plugins/cv-designer",
       "description": "LinkedIn export → tailored, machine-readable single-column A4 CV (PDF)"
     }
   ]

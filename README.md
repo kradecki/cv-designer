@@ -52,7 +52,7 @@ updates.
 
 **Manual fallback:** download `cv-designer.zip` from the
 [latest release](https://github.com/kradecki/cv-designer/releases/latest) and upload it at
-**Customize → Skills**, or copy `skills/cv-designer/` into `~/.claude/skills/`.
+**Customize → Skills**, or copy `plugins/cv-designer/skills/cv-designer/` into `~/.claude/skills/`.
 
 Then say something like *"Here's my LinkedIn export and a job posting URL — make me a CV."*
 
@@ -65,20 +65,22 @@ pip install -r requirements.txt
 python -m playwright install chromium          # once
 sudo apt install poppler-utils                 # pdftoppm / pdffonts (brew install poppler on macOS)
 
-# 1. LinkedIn export → text + draft YAML
-python skills/cv-designer/scripts/extract_linkedin.py --pdf Profile.pdf --out-dir work/
+SKILL=plugins/cv-designer/skills/cv-designer
 
-# 2. Edit work/linkedin-draft.yaml into cv-master.yaml (schema: skills/cv-designer/assets/example-cv.yaml)
+# 1. LinkedIn export → text + draft YAML
+python $SKILL/scripts/extract_linkedin.py --pdf Profile.pdf --out-dir work/
+
+# 2. Edit work/linkedin-draft.yaml into cv-master.yaml (schema: $SKILL/assets/example-cv.yaml)
 
 # 3. Optional photo
-python skills/cv-designer/scripts/prepare_photo.py --in IMG_1234.jpg --out work/photo.jpg
+python $SKILL/scripts/prepare_photo.py --in IMG_1234.jpg --out work/photo.jpg
 
 # 4. Render
-python skills/cv-designer/scripts/render_cv.py --data cv-master.yaml --out work/My-Name-CV.pdf \
+python $SKILL/scripts/render_cv.py --data cv-master.yaml --out work/My-Name-CV.pdf \
     --photo work/photo.jpg --auto-fit --preview-dir work/previews
 
 # 5. Check
-python skills/cv-designer/scripts/check_pdf.py --pdf work/My-Name-CV.pdf --data cv-master.yaml
+python $SKILL/scripts/check_pdf.py --pdf work/My-Name-CV.pdf --data cv-master.yaml
 ```
 
 `examples/` has a synthetic `sample-cv.yaml` and its rendered PDF.
@@ -86,14 +88,15 @@ python skills/cv-designer/scripts/check_pdf.py --pdf work/My-Name-CV.pdf --data 
 ## Repository layout
 
 ```
-.claude-plugin/         marketplace.json + plugin.json — the repo is its own marketplace
-skills/cv-designer/     the skill
-  SKILL.md              workflow the model follows
-  references/           tailoring protocol, writing rules, design spec
-  scripts/              extract_linkedin.py, prepare_photo.py, render_cv.py, check_pdf.py
-  assets/               template.html, style.css, example-cv.yaml, fonts/ (Inter, OFL)
-  evals/evals.json      test prompts and assertions used during development
-examples/               synthetic sample: YAML → PDF → PNG
+.claude-plugin/           marketplace.json — the repo is its own marketplace
+plugins/cv-designer/      the plugin (.claude-plugin/plugin.json)
+  skills/cv-designer/     the skill
+    SKILL.md              workflow the model follows
+    references/           tailoring protocol, writing rules, design spec
+    scripts/              extract_linkedin.py, prepare_photo.py, render_cv.py, check_pdf.py
+    assets/               template.html, style.css, example-cv.yaml, fonts/ (Inter, OFL)
+    evals/evals.json      test prompts and assertions used during development
+examples/                 synthetic sample: YAML → PDF → PNG
 ```
 
 ## Releases
@@ -121,4 +124,4 @@ Issues and pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 ## License
 
 MIT for the code and documentation. Inter is bundled under the SIL Open Font License 1.1
-(`skills/cv-designer/assets/fonts/LICENSE-Inter.txt`).
+(`plugins/cv-designer/skills/cv-designer/assets/fonts/LICENSE-Inter.txt`).

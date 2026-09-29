@@ -13,8 +13,9 @@ python -m playwright install chromium
 Render the synthetic example to confirm your setup:
 
 ```bash
-python skills/cv-designer/scripts/render_cv.py --data examples/sample-cv.yaml --out /tmp/sample.pdf
-python skills/cv-designer/scripts/check_pdf.py --pdf /tmp/sample.pdf --data examples/sample-cv.yaml
+SKILL=plugins/cv-designer/skills/cv-designer
+python $SKILL/scripts/render_cv.py --data examples/sample-cv.yaml --out /tmp/sample.pdf
+python $SKILL/scripts/check_pdf.py --pdf /tmp/sample.pdf --data examples/sample-cv.yaml
 ```
 
 ## Guidelines
@@ -23,8 +24,8 @@ python skills/cv-designer/scripts/check_pdf.py --pdf /tmp/sample.pdf --data exam
   `evals/files/` are gitignored for a reason.
 - **Machine readability is a hard constraint.** Any change to the template, CSS, or fonts must
   still pass `check_pdf.py` (word integrity under pdfminer, embedded fonts, no private-use glyphs).
-- **Skill changes**: edit `skills/cv-designer/SKILL.md` or `references/`; keep instructions
-  testable against `skills/cv-designer/evals/evals.json`.
+- **Skill changes**: edit `plugins/cv-designer/skills/cv-designer/SKILL.md` or its `references/`;
+  keep instructions testable against the skill's `evals/evals.json`.
 - **Update the README** when behavior, installation, or layout changes — it ships with every
   release.
 
@@ -37,10 +38,11 @@ claude plugin marketplace add /path/to/cv-designer
 claude plugin install cv-designer@cv-designer
 ```
 
-Or copy `skills/cv-designer/` into `~/.claude/skills/`, or build a zip for Claude.ai:
+Or copy `plugins/cv-designer/skills/cv-designer/` into `~/.claude/skills/`, or build a zip for
+Claude.ai:
 
 ```bash
-cd skills && zip -r ../cv-designer.zip cv-designer -x '*/__pycache__/*' -x '*/evals/*'
+cd plugins/cv-designer/skills && zip -r ../../../cv-designer.zip cv-designer -x '*/__pycache__/*' -x '*/evals/*'
 ```
 
 Validate plugin metadata before pushing:
