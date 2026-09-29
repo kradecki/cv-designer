@@ -68,7 +68,7 @@ def main():
 
     # --- private-use glyphs (ligatures / numeral alternates without Unicode mapping) ---
     pua = re.findall(r"[\ue000-\uf8ff]", text)
-    rec("unicode_text", not pua, f"{len(pua)} private-use chars" + (" — check font-variant settings in style.css" if pua else ""))
+    rec("unicode_text", not pua, f"{len(pua)} private-use chars" + (" — check font-variant settings in the design's style.css" if pua else ""))
 
     # --- word integrity under pdfminer's own layout analysis (pdfplumber is more tolerant) ---
     from pdfminer.high_level import extract_text as _pm_extract

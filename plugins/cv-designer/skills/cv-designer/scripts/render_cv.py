@@ -3,7 +3,7 @@
 Render a cv YAML file to a single-column A4 PDF (plus optional HTML and PNG previews).
 
     python render_cv.py --data cv-tailored.yaml --out out/Anna-Lindqvist-CV.pdf \
-        [--photo photo.jpg] [--accent "#4a6b7c"] [--max-pages 2] [--auto-fit] \
+        [--photo photo.jpg] [--design nordic] [--accent "#4a6b7c"] [--max-pages 2] [--auto-fit] \
         [--html-out out/cv.html] [--preview-dir out/previews]
 
 Exit codes: 0 ok · 2 page count exceeds --max-pages after auto-fit (trim content and re-run) · 1 error.
@@ -26,6 +26,8 @@ from jinja2 import Environment, FileSystemLoader
 HERE = Path(__file__).resolve().parent
 ASSETS = HERE.parent / "assets"
 FONT_DIR = ASSETS / "fonts"
+DESIGNS = HERE.parent / "designs"
+DEFAULT_DESIGN = "nordic"
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
@@ -105,15 +107,33 @@ def load_data(path: Path) -> dict:
     return data
 
 
-def build_html(data: dict, base_pt: float, accent: str, photo: Path | None) -> str:
-    env = Environment(loader=FileSystemLoader(str(ASSETS)), autoescape=True, trim_blocks=True, lstrip_blocks=True)
+def resolve_design(arg: str) -> Path:
+    """Name -> designs/<name>; existing directory path -> used as-is (side-loaded designs)."""
+    cand = Path(arg)
+    if cand.is_dir():
+        d = cand
+    elif "/" in arg or "\\" in arg:
+        sys.exit(f"error: design directory not found: {arg}")
+    else:
+        d = DESIGNS / arg
+        if not d.is_dir():
+            names = sorted(p.name for p in DESIGNS.iterdir() if p.is_dir() and not p.name.startswith("_"))
+            sys.exit(f"error: unknown design '{arg}'. Available: {', '.join(names)}")
+    missing = [f for f in ("template.html", "style.css") if not (d / f).exists()]
+    if missing:
+        sys.exit(f"error: design '{d}' is missing {', '.join(missing)}")
+    return d
+
+
+def build_html(data: dict, base_pt: float, accent: str, photo: Path | None, design_dir: Path) -> str:
+    env = Environment(loader=FileSystemLoader(str(design_dir)), autoescape=True, trim_blocks=True, lstrip_blocks=True)
     env.filters["fmt_date"] = fmt_date
     env.filters["short_url"] = short_url
     tpl = env.get_template("template.html")
     from markupsafe import Markup
     return tpl.render(
         **data,
-        css=Markup((ASSETS / "style.css").read_text(encoding="utf-8")),   # raw CSS: autoescape would break quotes
+        css=Markup((design_dir / "style.css").read_text(encoding="utf-8")),  # raw CSS: autoescape would break quotes
         font_faces=Markup(font_faces()),
         base_pt=base_pt,
         accent=accent,
@@ -180,6 +200,7 @@ def main():
     ap.add_argument("--data", required=True, type=Path)
     ap.add_argument("--out", required=True, type=Path, help="output PDF path")
     ap.add_argument("--photo", type=Path, help="prepared square JPEG; overrides basics.photo")
+    ap.add_argument("--design", help="design name under designs/ or a path to a design directory (default: YAML 'design:' key, else 'nordic')")
     ap.add_argument("--accent", default="#4a6b7c")
     ap.add_argument("--base-pt", type=float, default=10.0, help="body font size in pt (1rem)")
     ap.add_argument("--max-pages", type=int, default=2)
@@ -189,6 +210,7 @@ def main():
     args = ap.parse_args()
 
     data = load_data(args.data)
+    design_dir = resolve_design(args.design or data.get("design") or DEFAULT_DESIGN)
     photo = args.photo or (Path(data["basics"]["photo"]) if data["basics"].get("photo") else None)
     if photo and not photo.is_absolute():
         photo = (args.data.parent / photo) if not photo.exists() else photo
@@ -206,7 +228,7 @@ def main():
     # small density step usually cures it without the author having to cut content.
     attempts = []
     for base_pt in sizes:
-        html = build_html(data, base_pt, args.accent, photo)
+        html = build_html(data, base_pt, args.accent, photo, design_dir)
         html_to_pdf(html, args.out)
         pages, fill = page_stats(args.out)
         attempts.append((base_pt, pages, fill, html))
@@ -252,6 +274,7 @@ def main():
 
     summary = {
         "pdf": str(args.out),
+        "design": design_dir.name,
         "warnings": warnings,
         "pages": pages,
         "max_pages": args.max_pages,
