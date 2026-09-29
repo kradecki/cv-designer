@@ -1,0 +1,112 @@
+{
+  "skill_name": "cv-designer",
+  "evals": [
+    {
+      "id": 0,
+      "name": "tailored-with-photo",
+      "prompt": "This is my wife's LinkedIn profile export (linkedin-profile.pdf) and her photo (photo.jpg). She wants to apply for this: <posting URL> — make her a CV PDF tailored to that posting. Include the photo and the GDPR consent line, it's a Polish employer. English. Her email is <email>, phone <phone>, LinkedIn <profile URL>. The '25 years' in her summary is right — it includes paid training before her first listed role.",
+      "expected_output": "A two-page-max A4 PDF CV tailored to the Capgemini posting: single column, photo top-right, consent footer, standard section headings, embedded fonts, extractable text; plus a short tailoring report listing requirement coverage and honest gaps, and a reusable cv-master.yaml. Contact line shows email and phone; summary keeps 25 years.",
+      "files": [
+        "evals/files/linkedin-profile.pdf",
+        "evals/files/photo.jpg"
+      ],
+      "expectations": [
+        "A PDF file is delivered in outputs",
+        "PDF is at most 2 pages",
+        "Page size is A4",
+        "Text layer is extractable and contains the candidate's name",
+        "Standard section headings present as standalone lines, Experience before Education before Languages",
+        "All fonts embedded",
+        "No text smaller than 6.5 pt (hidden-keyword smell)",
+        "Body text at least 9 pt (median char size)",
+        "No placeholders or template artefacts in the PDF text",
+        "No first-person voice in the CV",
+        "No tools from the posting that are absent from the LinkedIn profile (Azure DevOps, UML, BPMN) appear in the CV",
+        "All text extracts as Unicode via pdfminer (no private-use glyphs for digits/ligatures)",
+        "Key words are not split under pdfminer layout analysis (e.g. 'Invest igat or')",
+        "Month-year dates are present (e.g. Jul 2004)",
+        "LinkedIn profile URL is a clickable link annotation",
+        "PDF metadata Title and Author are set",
+        "A reusable structured master file (cv-master.yaml) is delivered",
+        "Size under 2 MB",
+        "Email and phone from the user appear in the PDF",
+        "Summary keeps the candidate's confirmed '25 years'",
+        "Photo is embedded as an image",
+        "GDPR consent line present",
+        "A tailoring report (not just NOTES) lists honest gaps incl. Azure DevOps",
+        "Posting vocabulary mirrored where true: 'stakeholder' appears in the CV",
+        "German language shown as native/C2 (posting must-have)"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "general-no-posting",
+      "prompt": "Attached is a LinkedIn 'Save to PDF' export (linkedin-profile.pdf). Make a clean, general-purpose CV PDF out of it — not for a specific job, no photo. She's looking at corporate security / investigations roles in Poland and Germany. English.",
+      "expected_output": "A clean general CV PDF (no photo, no consent line), one or two pages, faithful to the LinkedIn content with LinkedIn prose split into proper bullets, plus a cv-master.yaml.",
+      "files": [
+        "evals/files/linkedin-profile.pdf"
+      ],
+      "expectations": [
+        "A PDF file is delivered in outputs",
+        "PDF is at most 2 pages",
+        "Page size is A4",
+        "Text layer is extractable and contains the candidate's name",
+        "Standard section headings present as standalone lines, Experience before Education before Languages",
+        "All fonts embedded",
+        "No text smaller than 6.5 pt (hidden-keyword smell)",
+        "Body text at least 9 pt (median char size)",
+        "No placeholders or template artefacts in the PDF text",
+        "No first-person voice in the CV",
+        "No tools from the posting that are absent from the LinkedIn profile (Azure DevOps, UML, BPMN) appear in the CV",
+        "All text extracts as Unicode via pdfminer (no private-use glyphs for digits/ligatures)",
+        "Key words are not split under pdfminer layout analysis (e.g. 'Invest igat or')",
+        "Month-year dates are present (e.g. Jul 2004)",
+        "LinkedIn profile URL is a clickable link annotation",
+        "PDF metadata Title and Author are set",
+        "A reusable structured master file (cv-master.yaml) is delivered",
+        "Size under 2 MB",
+        "No image embedded (user asked for no photo)",
+        "No consent line (not requested)",
+        "Missing email/phone is flagged to the user (draft naming or explicit note)"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "retailor-from-master",
+      "prompt": "Here's her cv-master.yaml from last time and her photo (photo.jpg). Tailor it for this posting: <posting URL> — PDF with photo and the GDPR consent line, English.",
+      "expected_output": "Tailored PDF built from the master without needing the LinkedIn export; contact details from the master appear in the header; tailoring report with coverage and gaps.",
+      "files": [
+        "evals/files/cv-master.yaml",
+        "evals/files/photo.jpg"
+      ],
+      "expectations": [
+        "A PDF file is delivered in outputs",
+        "PDF is at most 2 pages",
+        "Page size is A4",
+        "Text layer is extractable and contains the candidate's name",
+        "Standard section headings present as standalone lines, Experience before Education before Languages",
+        "All fonts embedded",
+        "No text smaller than 6.5 pt (hidden-keyword smell)",
+        "Body text at least 9 pt (median char size)",
+        "No placeholders or template artefacts in the PDF text",
+        "No first-person voice in the CV",
+        "No tools from the posting that are absent from the LinkedIn profile (Azure DevOps, UML, BPMN) appear in the CV",
+        "All text extracts as Unicode via pdfminer (no private-use glyphs for digits/ligatures)",
+        "Key words are not split under pdfminer layout analysis (e.g. 'Invest igat or')",
+        "Month-year dates are present (e.g. Jul 2004)",
+        "LinkedIn profile URL is a clickable link annotation",
+        "PDF metadata Title and Author are set",
+        "A reusable structured master file (cv-master.yaml) is delivered",
+        "Size under 2 MB",
+        "Email and phone from the user appear in the PDF",
+        "Summary keeps the candidate's confirmed '25 years'",
+        "Photo is embedded as an image",
+        "GDPR consent line present",
+        "A tailoring report (not just NOTES) lists honest gaps incl. Azure DevOps",
+        "Posting vocabulary mirrored where true: 'stakeholder' appears in the CV",
+        "German language shown as native/C2 (posting must-have)"
+      ]
+    }
+  ],
+  "_note": "Test inputs (a real LinkedIn export, photo and master YAML) are personal data and are not published. Put your own under evals/files/ to run these. The posting used during development was https://www.pracuj.pl/praca/software-consultant-uniformed-services-german-gdansk-aleja-grunwaldzka-472d,oferta,1005090376."
+}

@@ -1,0 +1,116 @@
+# cv-master.yaml — the single source of truth for one person's CV.
+# Every field below is documented; optional fields can be omitted or left null.
+# Rendering reads this file as-is: order of lists = order on the page.
+# Keep the MASTER complete and untrimmed. Tailored copies (cv-tailored.yaml)
+# are derived from it and may hide, reorder, compress and rewrite.
+
+meta:
+  version: 1
+  source: linkedin-pdf            # linkedin-pdf | notes | manual
+  updated: 2026-09-29
+  target: null                    # in a tailored copy: "Company — Role title"
+  notes:                          # facts the candidate confirmed that fit no field; read them before tailoring
+    - "Years of experience counted from 2015 (paid internship), not from the first listed role."
+
+basics:
+  name: Anna Lindqvist
+  headline: Senior Backend Engineer          # one line under the name; tailored per posting
+  location: Gdańsk, Poland                   # city, country — never a street address
+  email: anna.lindqvist@example.com
+  phone: "+48 600 000 000"                   # quoted so YAML keeps the plus sign
+  links:                                     # visible text is the shortened URL; keep 2–4
+    - label: LinkedIn
+      url: https://www.linkedin.com/in/annalindqvist
+    - label: GitHub
+      url: https://github.com/alindqvist
+  photo: null                                # path to a prepared square JPEG, or null
+
+summary: >-
+  Backend engineer with 9 years building payment and ledger systems in Go and Python,
+  most recently leading a four-person platform team at a fintech scale-up. Strong on
+  distributed-systems correctness, observability and pragmatic cloud cost control.
+  Comfortable owning a service end to end, from design review to on-call.
+
+experience:
+  - company: Nordpay
+    title: Senior Backend Engineer, Platform
+    location: Gdańsk, Poland (hybrid)
+    start: 2021-03                           # YYYY-MM (preferred) or YYYY
+    end: present                             # YYYY-MM, YYYY, or "present"
+    summary: Payments infrastructure for 2M+ merchants across the Nordics.   # optional one-liner: what the company/role is
+    bullets:
+      - Led the migration of the settlement ledger from a monolith to five Go services on Kubernetes, cutting p99 settlement latency from 4.2 s to 380 ms.
+      - Designed the idempotency and retry layer used by all payment APIs; incident count attributable to duplicate processing dropped to zero over 18 months.
+      - Introduced OpenTelemetry tracing and SLO-based alerting; on-call pages fell by roughly 60 %.
+      - Mentored three engineers; ran design reviews for the platform group.
+    tech: [Go, Python, PostgreSQL, Kafka, Kubernetes, AWS, Terraform, OpenTelemetry]   # optional; rendered as a small "Stack:" line
+    hidden: false                            # tailoring may set true to omit a role entirely
+
+  - company: Baltic Software House
+    title: Backend Developer
+    location: Gdańsk, Poland
+    start: 2017-06
+    end: 2021-02
+    summary: null
+    bullets:
+      - Built and operated a multi-tenant invoicing API (Python/Django, PostgreSQL) serving 40 B2B clients.
+      - Owned CI/CD on GitLab; brought deployment frequency from monthly to daily.
+    tech: [Python, Django, PostgreSQL, Redis, GitLab CI, Docker]
+    hidden: false
+
+  - company: Freelance
+    title: Web Developer
+    location: Remote
+    start: 2015
+    end: 2017
+    summary: null
+    bullets:
+      - Delivered ~20 small web applications for local businesses (PHP, JavaScript).
+    tech: []
+    hidden: false
+
+# Optional: one line summarising roles older than what is listed above. Rendered in italics under Experience.
+earlier_experience: null   # e.g. "Earlier: junior developer roles at two Tricity agencies, 2012–2015."
+
+skills:                                      # 3–6 groups, most relevant first; items comma-rendered, most relevant first
+  - group: Languages
+    items: [Go, Python, SQL, TypeScript]
+  - group: Platforms & infrastructure
+    items: [Kubernetes, AWS (EKS, RDS, SQS), Terraform, Docker, GitLab CI]
+  - group: Data & messaging
+    items: [PostgreSQL, Kafka, Redis]
+  - group: Practices
+    items: [Distributed systems design, Observability (OpenTelemetry, Grafana), Incident management, Technical mentoring]
+
+education:
+  - institution: Gdańsk University of Technology
+    degree: MSc                              # keep short: MSc, BSc, Eng., PhD
+    field: Computer Science
+    start: 2010
+    end: 2015
+    notes: null                              # thesis title, honours — usually null for senior profiles
+
+certifications:
+  - name: AWS Certified Solutions Architect – Associate
+    issuer: Amazon Web Services
+    year: 2023
+    url: null
+  - name: CKA – Certified Kubernetes Administrator
+    issuer: The Linux Foundation
+    year: 2022
+    url: null
+
+languages:
+  - language: Polish
+    level: Native
+  - language: English
+    level: C1
+  - language: Swedish
+    level: B1
+
+# Optional sections. Omit or leave empty when not relevant to the target role.
+projects: []                                  # items: {name, url, description, tech}
+publications: []                              # items: {title, venue, year, url}
+
+footer:
+  consent: null   # e.g. "I consent to the processing of my personal data for the purpose of this recruitment (GDPR Art. 6(1)(a))."

@@ -1,0 +1,8 @@
+# per-candidate working files — personal data, never commit
+cv-work/
+work/
+evals/files/
+
+__pycache__/
+*.pyc
+.DS_Store

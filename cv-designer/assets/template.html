@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ basics.name }} – CV</title>
+<meta name="author" content="{{ basics.name }}">
+<meta name="description" content="{{ basics.headline }}">
+<style>
+{{ font_faces }}
+{{ css }}
+html { font-size: {{ base_pt }}pt; }
+:root { --accent: {{ accent }}; }
+</style>
+</head>
+<body>
+<main class="cv">
+
+  <header class="header">
+    <div class="header-text">
+      <h1 class="name">{{ basics.name }}</h1>
+      <p class="headline">{{ basics.headline }}</p>
+      <p class="contact">
+        {%- set ns = namespace(first=true) -%}
+        {%- if basics.location -%}
+          <span>{{ basics.location }}</span>{% set ns.first = false %}
+        {%- endif -%}
+        {%- if basics.email -%}
+          {% if not ns.first %}<span class="sep">&nbsp;· </span>{% endif %}<a href="mailto:{{ basics.email }}">{{ basics.email }}</a>{% set ns.first = false %}
+        {%- endif -%}
+        {%- if basics.phone -%}
+          {% if not ns.first %}<span class="sep">&nbsp;· </span>{% endif %}<span>{{ basics.phone }}</span>{% set ns.first = false %}
+        {%- endif -%}
+        {%- for l in basics.links or [] -%}
+          {% if not ns.first %}<span class="sep">&nbsp;· </span>{% endif %}<a href="{{ l.url }}">{{ l.url|short_url }}</a>{% set ns.first = false %}
+        {%- endfor -%}
+      </p>
+    </div>
+    {% if photo_data_uri %}
+    <img class="photo" src="{{ photo_data_uri }}" alt="Photo of {{ basics.name }}">
+    {% endif %}
+  </header>
+
+  {% if summary %}
+  <section class="section">
+    <h2>Summary</h2>
+    <p class="summary">{{ summary }}</p>
+  </section>
+  {% endif %}
+
+  {% set visible_roles = experience|rejectattr('hidden')|list %}
+  {% if visible_roles %}
+  <section class="section">
+    <h2>Experience</h2>
+    {% for r in visible_roles %}
+    <article class="entry">
+      <div class="entry-head">
+        <div class="entry-title">
+          <span class="role">{{ r.title }}</span>
+          <span class="org">{{ r.company }}{% if r.location %}<span class="muted">, {{ r.location }}</span>{% endif %}</span>
+        </div>
+        <time class="dates">{{ r.start|fmt_date }} – {{ r.end|fmt_date }}</time>
+      </div>
+      {% if r.summary %}<p class="entry-summary">{{ r.summary }}</p>{% endif %}
+      {% if r.bullets %}
+      <ul class="bullets">
+        {% for b in r.bullets %}<li>{{ b }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if r.tech %}<p class="tech"><span class="label">Stack:</span> {{ r.tech|join(', ') }}</p>{% endif %}
+    </article>
+    {% endfor %}
+    {% if earlier_experience %}<p class="earlier">{{ earlier_experience }}</p>{% endif %}
+  </section>
+  {% endif %}
+
+  {% if skills %}
+  <section class="section">
+    <h2>Skills</h2>
+    <dl class="skills">
+      {% for g in skills %}
+      <dt>{{ g.group }}</dt>
+      <dd>{{ g['items']|join(', ') }}</dd>
+      {% endfor %}
+    </dl>
+  </section>
+  {% endif %}
+
+  {% if projects %}
+  <section class="section">
+    <h2>Selected projects</h2>
+    {% for p in projects %}
+    <article class="entry compact">
+      <div class="entry-head">
+        <div class="entry-title">
+          <span class="role">{% if p.url %}<a href="{{ p.url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}</span>
+        </div>
+      </div>
+      {% if p.description %}<p class="entry-summary">{{ p.description }}</p>{% endif %}
+      {% if p.tech %}<p class="tech"><span class="label">Stack:</span> {{ p.tech|join(', ') }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if education %}
+  <section class="section">
+    <h2>Education</h2>
+    {% for e in education %}
+    <article class="entry compact">
+      <div class="entry-head">
+        <div class="entry-title">
+          <span class="role">{{ e.degree }}{% if e.field %}, {{ e.field }}{% endif %}</span>
+          <span class="org">{{ e.institution }}</span>
+        </div>
+        {% if e.start or e.end %}<time class="dates">{% if e.start %}{{ e.start|fmt_date }} – {% endif %}{{ e.end|fmt_date }}</time>{% endif %}
+      </div>
+      {% if e.notes %}<p class="entry-summary">{{ e.notes }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if certifications %}
+  <section class="section">
+    <h2>Certifications</h2>
+    <ul class="plain-list">
+      {% for c in certifications %}
+      <li>{% if c.url %}<a href="{{ c.url }}">{{ c.name }}</a>{% else %}{{ c.name }}{% endif %}{% if c.issuer %}<span class="muted">, {{ c.issuer }}</span>{% endif %}{% if c.year %}<span class="muted"> · {{ c.year }}</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if publications %}
+  <section class="section">
+    <h2>Publications & talks</h2>
+    <ul class="plain-list">
+      {% for p in publications %}
+      <li>{% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}{% if p.venue %}<span class="muted">, {{ p.venue }}</span>{% endif %}{% if p.year %}<span class="muted"> · {{ p.year }}</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if languages %}
+  <section class="section">
+    <h2>Languages</h2>
+    <p class="languages">
+      {%- for l in languages -%}
+        <span class="lang">{{ l.language }}<span class="muted"> – {{ l.level }}</span></span>{% if not loop.last %}<span class="sep">&nbsp;· </span>{% endif %}
+      {%- endfor -%}
+    </p>
+  </section>
+  {% endif %}
+
+  {% if footer and footer.consent %}
+  <footer class="consent">{{ footer.consent }}</footer>
+  {% endif %}
+
+</main>
+</body>
+</html>
