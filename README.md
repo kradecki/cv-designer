@@ -20,18 +20,18 @@ single-column A4 PDF — plus a small Python pipeline you can run on its own.
    protocol: requirements table → evidence map → strategy → rewrite. Every bullet traces back to
    the master; nothing is invented. Ships a `tailoring-report.md` with requirement coverage and an
    honest-gaps list.
-4. **Render** — YAML through the chosen design's HTML/CSS template (see Designs) with headless Chromium: Inter embedded, A4,
-   two pages max, optional photo, optional consent footer (Polish employers). Auto-fits density and
-   warns about headlines and role headers that will wrap.
+4. **Render** — YAML through the chosen design's HTML/CSS template (see Designs) with headless
+   Chromium: Inter embedded, A4, two pages max, optional photo, optional consent footer (Polish
+   employers). Auto-fits density and warns about headlines and role headers that will wrap.
 5. **Verify** — checks the PDF before delivery: page count, text layer, word integrity under
    pdfminer, standard section order, embedded fonts, metadata, no hidden/tiny/white text, link
    annotations, file size.
 
-The design is deliberately plain — one typeface, one muted accent, hairlines, whitespace. Machine
-readability drove choices you might not expect: no two-column layout, mixed-case section headings
-(uppercase + tracking splits under pdfminer), no OpenType numeral variants (they extract as
-private-use glyphs), and the *hinted* Inter build (the unhinted web build makes pdfminer split
-words after every "t" in the 500/600 weights).
+The designs are deliberately plain — nordic sets the tone: one typeface, one muted accent,
+hairlines, whitespace. Machine readability drove choices you might not expect: no two-column
+layout, mixed-case section headings (uppercase + tracking splits under pdfminer), no OpenType
+numeral variants (they extract as private-use glyphs), and the *hinted* Inter build (the unhinted
+web build makes pdfminer split words after every "t" in the 500/600 weights).
 
 ## Designs
 
@@ -117,7 +117,7 @@ plugins/cv-designer/      the plugin (.claude-plugin/plugin.json)
     references/           tailoring protocol, writing rules, design spec
     scripts/              extract_linkedin.py, prepare_photo.py, render_cv.py, check_pdf.py
     designs/
-      nordic/             default design (template.html, style.css, preview.png)
+      nordic/             default design (template.html, style.css, design.json, preview.png)
       _template/          design authoring guide + contract (README.md, template.html, style.css)
     assets/               example-cv.yaml, fonts/ (Inter, OFL)
     evals/evals.json      test prompts and assertions used during development

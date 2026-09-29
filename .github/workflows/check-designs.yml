@@ -33,9 +33,11 @@ jobs:
       - name: Render and check every design
         run: |
           set -e
+          found=0
           for d in designs/*/; do
             name=$(basename "$d")
             case "$name" in _*) continue;; esac
+            found=$((found+1))
             echo "::group::$name"
             python -c "import json,sys; m=json.load(open('designs/$name/design.json')); assert m.get('name') and m.get('description'), 'design.json needs name+description'"
             test -f "designs/$name/preview.png" || { echo "designs/$name/preview.png missing (required)"; exit 1; }
@@ -51,3 +53,4 @@ jobs:
           EOF
             echo "::endgroup::"
           done
+          test "$found" -gt 0 || { echo "no designs checked"; exit 1; }

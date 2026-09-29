@@ -109,6 +109,7 @@ def load_data(path: Path) -> dict:
 
 def resolve_design(arg: str) -> Path:
     """Name -> designs/<name>; existing directory path -> used as-is (side-loaded designs)."""
+    arg = str(arg)
     cand = Path(arg)
     if cand.is_dir():
         d = cand
@@ -117,6 +118,8 @@ def resolve_design(arg: str) -> Path:
     else:
         d = DESIGNS / arg
         if not d.is_dir():
+            if not DESIGNS.is_dir():
+                sys.exit(f"error: designs directory missing: {DESIGNS}")
             names = sorted(p.name for p in DESIGNS.iterdir() if p.is_dir() and not p.name.startswith("_"))
             sys.exit(f"error: unknown design '{arg}'. Available: {', '.join(names)}")
     missing = [f for f in ("template.html", "style.css") if not (d / f).exists()]

@@ -169,10 +169,11 @@ warning in the YAML before looking at the previews; they are the defects reviewe
   if the spill was small, trimming a few lines and re-rendering at `--base-pt 10` reads better.
 - Then **look at every preview PNG** with the image reader and go through the checklist at the end
   of `references/design.md`: stranded headings, orphaned bullets, the contact line, the photo crop,
-  template artefacts. Fix in the YAML, re-render, look again. Two or three rounds is normal.
+  design artefacts. Fix in the YAML, re-render, look again. Two or three rounds is normal.
 
 Accent colour is `--accent "#hex"` if the candidate asks for something other than the default
-blue-grey; keep it muted (see design.md). Design choice and accent are the only look controls; nothing else is configurable per CV.
+blue-grey; keep it muted (see design.md). Design choice and accent are the only look controls; nothing else
+is configurable per CV.
 
 ### 7. Verify machine readability
 
@@ -220,7 +221,7 @@ of the design; they will see it.
 | Schema for master / tailored YAML | `assets/example-cv.yaml` |
 | How to write the master, bullets, summary; machine-readability rules; cut order | `references/writing-rules.md` |
 | Tailoring protocol and report format | `references/tailoring.md` |
-| What the template does, what may change, render review checklist | `references/design.md` |
+| What each design does, what may change, render review checklist | `references/design.md` |
 | Extract LinkedIn PDF | `scripts/extract_linkedin.py` |
 | Crop/resize photo | `scripts/prepare_photo.py` |
 | YAML → PDF (+HTML, PNG previews, auto-fit) | `scripts/render_cv.py` |
