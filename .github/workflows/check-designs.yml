@@ -1,0 +1,53 @@
+name: Check designs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check-designs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: plugins/cv-designer/skills/cv-designer
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r ../../../../requirements.txt
+          python -m playwright install --with-deps chromium
+          sudo apt-get install -y poppler-utils
+
+      - name: Synthetic photo
+        run: |
+          python -c "from PIL import Image; Image.new('RGB',(800,800),(120,140,160)).save('/tmp/ci-face.jpg')"
+          python scripts/prepare_photo.py --in /tmp/ci-face.jpg --out /tmp/ci-photo.jpg
+
+      - name: Render and check every design
+        run: |
+          set -e
+          for d in designs/*/; do
+            name=$(basename "$d")
+            case "$name" in _*) continue;; esac
+            echo "::group::$name"
+            python -c "import json,sys; m=json.load(open('designs/$name/design.json')); assert m.get('name') and m.get('description'), 'design.json needs name+description'"
+            test -f "designs/$name/preview.png" || { echo "designs/$name/preview.png missing (required)"; exit 1; }
+            python scripts/render_cv.py --data assets/example-cv.yaml --out "/tmp/$name-plain.pdf" --design "$name" --auto-fit
+            python scripts/check_pdf.py --pdf "/tmp/$name-plain.pdf" --data assets/example-cv.yaml
+            python scripts/render_cv.py --data assets/example-cv.yaml --out "/tmp/$name-photo.pdf" --design "$name" --auto-fit --photo /tmp/ci-photo.jpg
+            python scripts/check_pdf.py --pdf "/tmp/$name-photo.pdf" --data assets/example-cv.yaml
+            python - "$name" <<'EOF'
+          import sys, pdfplumber
+          name = sys.argv[1]
+          with pdfplumber.open(f"/tmp/{name}-photo.pdf") as doc:
+              assert doc.pages[0].images, f"{name}: photo variant embeds no image on page 1"
+          EOF
+            echo "::endgroup::"
+          done
