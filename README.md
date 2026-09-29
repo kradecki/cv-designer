@@ -1,4 +1,4 @@
-# cv-designer
+# CV Designer
 
 [![Latest release](https://img.shields.io/github/v/release/kradecki/cv-designer)](https://github.com/kradecki/cv-designer/releases/latest)
 [![Release build](https://github.com/kradecki/cv-designer/actions/workflows/release.yml/badge.svg)](https://github.com/kradecki/cv-designer/actions/workflows/release.yml)
@@ -60,11 +60,17 @@ Then say something like *"Here's my LinkedIn export and a job posting URL — ma
 
 The scripts are plain Python and don't need the model; only the writing and tailoring steps do.
 
+Setup (once):
+
 ```bash
 pip install -r requirements.txt
-python -m playwright install chromium          # once
-sudo apt install poppler-utils                 # pdftoppm / pdffonts (brew install poppler on macOS)
+python -m playwright install chromium
+sudo apt install poppler-utils   # pdftoppm / pdffonts — on macOS: brew install poppler
+```
 
+Pipeline:
+
+```bash
 SKILL=plugins/cv-designer/skills/cv-designer
 
 # 1. LinkedIn export → text + draft YAML
@@ -106,7 +112,7 @@ release — the zip is never committed to the repository. Marketplace installs t
 directly; the release zip is the manual-upload fallback.
 
 ```bash
-git tag v0.2.0 && git push origin v0.2.0
+git tag vX.Y.Z && git push origin vX.Y.Z
 ```
 
 ## Evaluation
