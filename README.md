@@ -44,10 +44,32 @@ Pick a look; every design passes the same machine-readability gate before it can
 Choose it in conversation ("use the nordic design"), save it in your `cv-master.yaml`
 (`design: nordic`), or pass `--design nordic` to the renderer.
 
-**Create your own:** copy `designs/_template/`, restyle, run the test loop, open a PR — the
+### Create your own design
+
+A design is one folder: `template.html` + `style.css` + `design.json` + `preview.png`. Four steps
+(from `plugins/cv-designer/skills/cv-designer/`):
+
+```bash
+# 1. Copy the scaffold
+cp -r designs/_template designs/my-design
+
+# 2. Restyle — usually style.css alone; the scaffold's comments mark what must stay
+$EDITOR designs/my-design/style.css
+
+# 3. Test until every check passes
+python scripts/render_cv.py --data assets/example-cv.yaml --out /tmp/my.pdf \
+    --design designs/my-design --auto-fit --preview-dir /tmp/previews
+python scripts/check_pdf.py --pdf /tmp/my.pdf --data assets/example-cv.yaml
+
+# 4. Fill design.json, generate preview.png (commands in the guide), add yourself
+#    to the gallery above, open a PR
+```
+
+The few hard rules — standard headings, rem sizing, the bundled Inter, no bars/pills/columns —
+exist because screening software reads the PDF before a human does; the
 [design authoring guide](plugins/cv-designer/skills/cv-designer/designs/_template/README.md)
-has the full contract. CI renders every design against the sample CV and blocks anything that
-breaks ATS extraction.
+explains each one. CI re-renders every design against the sample CV and blocks any PR that breaks
+ATS extraction, so you can't ship a pretty-but-unparseable CV by accident.
 
 ## Installation
 
