@@ -1,0 +1,8 @@
+{
+  "name": "purple-squirrel",
+  "displayName": "Purple Squirrel",
+  "description": "Turns a LinkedIn profile export into a tailored, machine-readable CV as a single-column A4 PDF — makes the ATS see a purple squirrel",
+  "author": { "name": "Krzysztof Radecki" },
+  "repository": "https://github.com/kradecki/purple-squirrel",
+  "license": "MIT"
+}

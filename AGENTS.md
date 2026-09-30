@@ -1,12 +1,14 @@
-# Agent instructions — cv-designer
+# Agent instructions — purple-squirrel
 
-CV Designer: a Claude skill (plus standalone Python pipeline) that turns a LinkedIn export into a
-tailored, machine-readable single-column A4 CV. This repo is also its own plugin marketplace.
+Purple Squirrel (repo, marketplace and plugin name) ships the **cv-designer** Claude skill (plus a
+standalone Python pipeline): LinkedIn export → tailored, machine-readable single-column A4 CV.
+"Purple squirrel" is recruiting slang for the perfect-match candidate. The skill keeps its own
+name — only repo/marketplace/plugin are branded purple-squirrel.
 
 ## Map
 
-- `.claude-plugin/marketplace.json` — marketplace; the plugin lives at `plugins/cv-designer/`.
-- `plugins/cv-designer/skills/cv-designer/` — the skill: `SKILL.md`, `scripts/`, `assets/`,
+- `.claude-plugin/marketplace.json` — marketplace; the plugin lives at `plugins/purple-squirrel/`.
+- `plugins/purple-squirrel/skills/cv-designer/` — the skill: `SKILL.md`, `scripts/`, `assets/`,
   `references/`, `designs/`.
 - `designs/<name>/` — one folder per visual design (`template.html`, `style.css`, `design.json`,
   `preview.png`). `designs/nordic` is the default; `designs/_template/README.md` is the design
@@ -19,7 +21,7 @@ tailored, machine-readable single-column A4 CV. This repo is also its own plugin
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m playwright install chromium        # once; poppler-utils also needed
 
-# from plugins/cv-designer/skills/cv-designer/ — render the sample and gate it:
+# from plugins/purple-squirrel/skills/cv-designer/ — render the sample and gate it:
 python scripts/render_cv.py --data assets/example-cv.yaml --out /tmp/cv.pdf --auto-fit
 python scripts/check_pdf.py --pdf /tmp/cv.pdf --data assets/example-cv.yaml
 
@@ -38,7 +40,7 @@ claude plugin validate .                               # after touching plugin/m
   test with the synthetic sample only.
 - **Fonts:** only the bundled hinted Inter via `font_faces()`. Other fonts (and OpenType numeral
   variants) break pdfminer extraction — this is the single most fragile ATS constraint.
-- **Marketplace `source` stays an explicit subdir** (`./plugins/cv-designer`). claude.ai's
+- **Marketplace `source` stays an explicit subdir** (`./plugins/purple-squirrel`). claude.ai's
   server-side sync rejects `source: "."` even though the Claude Code CLI accepts it.
 - **README.md and CONTRIBUTING.md are updated in the same change** whenever behavior, layout,
   install flow, designs, or the release process shift. New designs also go into the README gallery.

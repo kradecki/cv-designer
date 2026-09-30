@@ -1,13 +1,13 @@
 {
-  "name": "cv-designer",
+  "name": "purple-squirrel",
   "owner": { "name": "Krzysztof Radecki" },
-  "description": "CV designer skill — turns a LinkedIn export into a tailored, machine-readable CV",
+  "description": "Purple Squirrel — turns a LinkedIn export into a tailored, machine-readable CV via the cv-designer skill",
   "plugins": [
     {
-      "name": "cv-designer",
-      "displayName": "CV Designer",
-      "source": "./plugins/cv-designer",
-      "description": "LinkedIn export → tailored, machine-readable single-column A4 CV (PDF)"
+      "name": "purple-squirrel",
+      "displayName": "Purple Squirrel",
+      "source": "./plugins/purple-squirrel",
+      "description": "LinkedIn export → tailored, machine-readable single-column A4 CV (PDF), in your choice of design"
     }
   ]
 }

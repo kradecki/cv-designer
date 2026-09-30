@@ -1,11 +1,17 @@
-# CV Designer
+# Purple Squirrel
 
-[![Latest release](https://img.shields.io/github/v/release/kradecki/cv-designer)](https://github.com/kradecki/cv-designer/releases/latest)
-[![Release build](https://github.com/kradecki/cv-designer/actions/workflows/release.yml/badge.svg)](https://github.com/kradecki/cv-designer/actions/workflows/release.yml)
+[![Latest release](https://img.shields.io/github/v/release/kradecki/purple-squirrel)](https://github.com/kradecki/purple-squirrel/releases/latest)
+[![Release build](https://github.com/kradecki/purple-squirrel/actions/workflows/release.yml/badge.svg)](https://github.com/kradecki/purple-squirrel/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A Claude skill that turns a LinkedIn profile export into a tailored, machine-readable CV as a
-single-column A4 PDF — plus a small Python pipeline you can run on its own.
+A *purple squirrel* is recruiting slang for the mythical candidate who matches every requirement
+of a job posting — so rare that finding one is like spotting a purple squirrel in the wild. This
+project helps screening software see one in you, honestly: nothing invented, everything traceable
+to your real record.
+
+Inside is the **cv-designer** Claude skill: it turns a LinkedIn profile export into a tailored,
+machine-readable CV as a single-column A4 PDF — plus a small Python pipeline you can run on its
+own.
 
 ![Example CV rendered by the skill](examples/sample-cv.png)
 
@@ -39,7 +45,7 @@ Pick a look; every design passes the same machine-readability gate before it can
 
 | | |
 |---|---|
-| <img src="plugins/cv-designer/skills/cv-designer/designs/nordic/preview.png" width="260" alt="nordic design preview"> | **nordic** — Scandinavian restraint: single muted accent, hairline rules, Inter, lots of air. The default. |
+| <img src="plugins/purple-squirrel/skills/cv-designer/designs/nordic/preview.png" width="260" alt="nordic design preview"> | **nordic** — Scandinavian restraint: single muted accent, hairline rules, Inter, lots of air. The default. |
 
 Choose it in conversation ("use the nordic design"), save it in your `cv-master.yaml`
 (`design: nordic`), or pass `--design nordic` to the renderer.
@@ -47,7 +53,7 @@ Choose it in conversation ("use the nordic design"), save it in your `cv-master.
 ### Create your own design
 
 A design is one folder: `template.html` + `style.css` + `design.json` + `preview.png`. Four steps
-(from `plugins/cv-designer/skills/cv-designer/`):
+(from `plugins/purple-squirrel/skills/cv-designer/`):
 
 ```bash
 # 1. Copy the scaffold
@@ -67,7 +73,7 @@ python scripts/check_pdf.py --pdf /tmp/my.pdf --data assets/example-cv.yaml
 
 The few hard rules — standard headings, rem sizing, the bundled Inter, no bars/pills/columns —
 exist because screening software reads the PDF before a human does; the
-[design authoring guide](plugins/cv-designer/skills/cv-designer/designs/_template/README.md)
+[design authoring guide](plugins/purple-squirrel/skills/cv-designer/designs/_template/README.md)
 explains each one. CI re-renders every design against the sample CV and blocks any PR that breaks
 ATS extraction, so you can't ship a pretty-but-unparseable CV by accident.
 
@@ -78,19 +84,19 @@ This repository is a Claude plugin marketplace — one install flow everywhere.
 **Claude Code:**
 
 ```bash
-claude plugin marketplace add kradecki/cv-designer
-claude plugin install cv-designer@cv-designer
+claude plugin marketplace add kradecki/purple-squirrel
+claude plugin install purple-squirrel@purple-squirrel
 ```
 
-or in-session: `/plugin install cv-designer@cv-designer`.
+or in-session: `/plugin install purple-squirrel@purple-squirrel`.
 
 **Claude.ai / Claude Desktop:** go to **Customize → Plugins → Add → Add marketplace**, enter
-`kradecki/cv-designer`, then add the **cv-designer** plugin. Enable *Sync automatically* to pick up
+`kradecki/purple-squirrel`, then add the **Purple Squirrel** plugin. Enable *Sync automatically* to pick up
 updates.
 
 **Manual fallback:** download `cv-designer.zip` from the
-[latest release](https://github.com/kradecki/cv-designer/releases/latest) and upload it at
-**Customize → Skills**, or copy `plugins/cv-designer/skills/cv-designer/` into `~/.claude/skills/`.
+[latest release](https://github.com/kradecki/purple-squirrel/releases/latest) and upload it at
+**Customize → Skills**, or copy `plugins/purple-squirrel/skills/cv-designer/` into `~/.claude/skills/`.
 
 Then say something like *"Here's my LinkedIn export and a job posting URL — make me a CV."*
 
@@ -109,7 +115,7 @@ sudo apt install poppler-utils   # pdftoppm / pdffonts — on macOS: brew instal
 Pipeline:
 
 ```bash
-SKILL=plugins/cv-designer/skills/cv-designer
+SKILL=plugins/purple-squirrel/skills/cv-designer
 
 # 1. LinkedIn export → text + draft YAML
 python $SKILL/scripts/extract_linkedin.py --pdf Profile.pdf --out-dir work/
@@ -133,7 +139,7 @@ python $SKILL/scripts/check_pdf.py --pdf work/My-Name-CV.pdf --data cv-master.ya
 
 ```
 .claude-plugin/           marketplace.json — the repo is its own marketplace
-plugins/cv-designer/      the plugin (.claude-plugin/plugin.json)
+plugins/purple-squirrel/      the plugin (.claude-plugin/plugin.json)
   skills/cv-designer/     the skill
     SKILL.md              workflow the model follows
     references/           tailoring protocol, writing rules, design spec
@@ -171,4 +177,4 @@ Issues and pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 ## License
 
 MIT for the code and documentation. Inter is bundled under the SIL Open Font License 1.1
-(`plugins/cv-designer/skills/cv-designer/assets/fonts/LICENSE-Inter.txt`).
+(`plugins/purple-squirrel/skills/cv-designer/assets/fonts/LICENSE-Inter.txt`).

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: plugins/cv-designer/skills/cv-designer
+        working-directory: plugins/purple-squirrel/skills/cv-designer
     steps:
       - uses: actions/checkout@v4
 
