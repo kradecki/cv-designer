@@ -1,4 +1,4 @@
-# Purple Squirrel
+![Purple Squirrel — tailored, machine-readable CVs, nothing invented](docs/banner.jpg)
 
 [![Latest release](https://img.shields.io/github/v/release/kradecki/purple-squirrel)](https://github.com/kradecki/purple-squirrel/releases/latest)
 [![Release build](https://github.com/kradecki/purple-squirrel/actions/workflows/release.yml/badge.svg)](https://github.com/kradecki/purple-squirrel/actions/workflows/release.yml)
